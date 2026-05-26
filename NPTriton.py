@@ -144,14 +144,14 @@ class Triton(IPInstrument):
                            get_cmd=partial(
                                self._get_control_B_param, 'RVST:RATE'),
                            set_cmd=partial(self._set_control_magnet_sweeprate_param))
-
+                           
         self.add_parameter(name='magnet_sweeprate_insta',
                            label='Instantaneous magnet sweep rate',
                            unit='T/min',
                            get_cmd=partial(self._get_control_B_param, 'RFST'))
 
         self.add_parameter(name='magnet_swh',
-                           lable='Magnet persistent switch heater',
+                           label='Magnet persistent switch heater',
                            set_cmd=self._set_swh,
                            get_cmd='READ:SYS:VRM:SWHT',
                            get_parser=self._parse_swh,
@@ -170,25 +170,48 @@ class Triton(IPInstrument):
                            unit='T',
                            get_cmd=partial(self._get_control_B_param, 'VECT'))
 
-        # self.add_parameter(name='Bx',
-        #                    label='Magnetic field x-component',
-        #                    unit='T',
-        #                    get_cmd=partial(
-        #                        self._get_control_Bcomp_param, 'VECTBx'),
-        #                    set_cmd=partial(self._set_control_Bx_param))
-        #
-        # self.add_parameter(name='By',
-        #                    label='Magnetic field y-component',
-        #                    unit='T',
-        #                    get_cmd=partial(
-        #                        self._get_control_Bcomp_param, 'VECTBy'),
-        #                    set_cmd=partial(self._set_control_By_param))
-
+        self.add_parameter(name='sweep_Bx',
+                           label='Magnetic field x-component',
+                           unit='T',
+                           get_cmd=partial(
+                               self._get_Bx),
+                           set_cmd=self._set_Bx_stable)
+        self.add_parameter(name='sweep_By',
+                           label='Magnetic field y-component',
+                           unit='T',
+                           get_cmd=partial(
+                               self._get_By),
+                           set_cmd=partial(self._set_By_stable))
+                           
+        self.add_parameter(name='sweep_Bz',
+                           label='Magnetic field z-component',
+                           unit='T',
+                           get_cmd=partial(
+                               self._get_Bz),
+                           set_cmd=partial(self._set_Bz_stable))
+                           
         self.add_parameter(name='field',
                            label='B',
                            unit='T',
-                           get_cmd=self._get_field,
-                           set_cmd=partial(self._set_field_return))
+                           get_cmd=self._get_field)
+
+        self.add_parameter(name='field_Bx',
+                           label='B',
+                           unit='T',
+                           get_cmd=self._get_field_Bx,
+                           set_cmd=partial(self._set_field_return_Bx))
+                         
+        self.add_parameter(name='field_By',
+                           label='B',
+                           unit='T',
+                           get_cmd=self._get_field_By,
+                           set_cmd=partial(self._set_field_return_By))
+                           
+        self.add_parameter(name='field_Bz',
+                           label='B',
+                           unit='T',
+                           get_cmd=self._get_field_Bz,
+                           set_cmd=partial(self._set_field_return_Bz))
 
         self.add_parameter(name='field_set_stable',
                            label='B',
@@ -300,8 +323,45 @@ class Triton(IPInstrument):
     #     return self._get_response_value(self.ask(cmd[:-2]) + cmd[-2:])
 
     def _get_field(self):
-        return float(self.ask('READ:SYS:VRM:VECT').split(' ')[-1].strip('T]'))
+        field = self.ask('READ:SYS:VRM:VECT')
+        Bx, By, Bz = field.split(' ')
+        
+        Bx = float(Bx.strip("STAT:SYS:VRM:VECT:[").strip('T]'))
+        By = float(By.strip("T"))
+        Bz = float(Bz.strip('T]'))
 
+        return (Bx, By, Bz)
+    
+    def _get_field_Bx(self):
+        field = self.ask('READ:SYS:VRM:VECT')
+        Bx, By, Bz = field.split(' ')
+        
+        Bx = float(Bx.strip("STAT:SYS:VRM:VECT:[").strip('T]'))
+        By = float(By.strip("T"))
+        Bz = float(Bz.strip('T]'))
+
+        return Bx
+    
+    def _get_field_By(self):
+        field = self.ask('READ:SYS:VRM:VECT')
+        Bx, By, Bz = field.split(' ')
+        
+        Bx = float(Bx.strip("STAT:SYS:VRM:VECT:[").strip('T]'))
+        By = float(By.strip("T"))
+        Bz = float(Bz.strip('T]'))
+
+        return By
+    
+    def _get_field_Bz(self):
+        field = self.ask('READ:SYS:VRM:VECT')
+        Bx, By, Bz = field.split(' ')
+        
+        Bx = float(Bx.strip("STAT:SYS:VRM:VECT:[").strip('T]'))
+        By = float(By.strip("T"))
+        Bz = float(Bz.strip('T]'))
+
+        return Bz
+        
     def _get_response(self, msg):
         return msg.split(':')[-1]
 
@@ -365,16 +425,17 @@ class Triton(IPInstrument):
         self.write(cmd)
 
     def _set_control_magnet_sweeprate_param(self, s):
-        if 0 < s <= 0.205:
-            x = 0
-            y = 0
-            z = round(self.field(), 4)
+        sweep_limit = 0.205 
+        
+        if 0 < s <= sweep_limit:
+            x = round(self.field()[0], 4)
+            y = round(self.field()[1], 4)
+            z = round(self.field()[2], 4)
             self.write('SET:SYS:VRM:COO:CART:RVST:MODE:RATE:RATE:' + str(s) +
                        ':VSET:[' + str(x) + ' ' + str(y) + ' ' + str(z) + ']\r\n')
         else:
-            print(
-                'Warning: set sweeprate in range (0 , 0.205] T/min, not setting sweeprate')
-
+            print('Warning: set sweeprate in range (0 , {}] T/min, not setting sweeprate'.format(sweep_limit))
+                
 ## We don't have the vector magnet option.
     # def _set_control_Bx_param(self, x):
     #     s = self.magnet_sweeprate()
@@ -402,7 +463,8 @@ class Triton(IPInstrument):
     #     while self.magnet_status() != 'IDLE':
     #         pass
 
-    def _set_field_stable(self, z):
+    def _set_field_stable(self, B):
+        x, y, z = B
         if self._first_magnet_use is False:
             usecheck = input('Are you sure you want to use the magnet? [y/n]: ')
             if usecheck.lower() == 'y':
@@ -411,7 +473,8 @@ class Triton(IPInstrument):
             else:
                 print('Magnet will not be used')
                 return
-
+        
+        
         ## Turn this off for now. Just be cautious when using the magnet
         # maxtempHon8T = 4.87
         # maxtempHon0T = 4.6
@@ -444,8 +507,6 @@ class Triton(IPInstrument):
         #     magtemp = self.magnet_temp()
 
         s = self.magnet_sweeprate()
-        x = 0
-        y = 0
         self.write('SET:SYS:VRM:COO:CART:RVST:MODE:RATE:RATE:' + str(s) +
                    ':VSET:[' + str(x) + ' ' + str(y) + ' ' + str(z) + ']')
         self.write('SET:SYS:VRM:ACTN:RTOS')
@@ -455,8 +516,42 @@ class Triton(IPInstrument):
         #       'plus the time required for operating the switch...')
         while self.magnet_status() != 'IDLE':
             pass
-
-    def _set_field_return(self, z):
+    
+    def _get_Bx(self):
+        return self.field()[0]
+        
+    def _get_By(self):
+        return self.field()[1]
+    
+    def _get_Bz(self):
+        return self.field()[2]
+        
+    def _set_Bx_stable(self, Bx, holdZValue=None):
+        x, y, z = self.field()
+        y = round(y, 4)
+        z = round(z, 4)
+        
+        if holdZValue != None: # sometimes the magnet fluctuates and Bz slowly ramps up during sweeps
+            z = holdZValue
+        self.field_set_stable((Bx, y, z))
+    
+    def _set_By_stable(self, By):
+        x, y, z = self.field()
+        x = round(x, 4)
+        z = round(z, 4)
+        
+        self._set_field_stable((x, By, z))
+        
+    def _set_Bz_stable(self, Bz):
+        x, y, z = self.field()
+        x = round(x, 4)
+        y = round(y, 4)
+        
+        self._set_field_stable((x, y, Bz))
+        
+    def _set_field_return_Bx(self, Bx):
+        x, y, z = self.field()
+        x = Bx
         if self._first_magnet_use is False:
             usecheck = input('Are you sure you want to use the magnet? [y/n]: ')
             if usecheck.lower() == 'y':
@@ -498,8 +593,110 @@ class Triton(IPInstrument):
         #     magtemp = self.magnet_temp()
 
         s = self.magnet_sweeprate()
-        x = 0
-        y = 0
+        self.write('SET:SYS:VRM:COO:CART:RVST:MODE:RATE:RATE:' + str(s) +
+                   ':VSET:[' + str(x) + ' ' + str(y) + ' ' + str(z) + ']')
+        self.write('SET:SYS:VRM:ACTN:RTOS')
+        # just to give an time estimate, +10s for overhead
+        # t_wait = self.magnet_sweep_time() * 60 + 10
+        # print('Sweep time approximately ' + str(t_wait) + ' seconds')
+        return
+        
+    def _set_field_return_By(self, By):
+        x, y, z = self.field()
+        y = By
+        if self._first_magnet_use is False:
+            usecheck = input('Are you sure you want to use the magnet? [y/n]: ')
+            if usecheck.lower() == 'y':
+                self._first_magnet_use = True
+                pass
+            else:
+                print('Magnet will not be used')
+                return
+
+        ## Turn this off for now. Just be cautious when using the magnet
+        # maxtempHon8T = 4.87
+        # maxtempHon0T = 4.6
+        # maxtempHoff8T = 4.7
+        # maxtempHoff0T = 4.3
+        # magtemp = self.magnet_temp()
+        # if self.magnet_swh():
+        #     f = np.abs(self.field())
+        #     if f < 0.4:
+        #         condit_temp = maxtempHon0T + np.sqrt(0.02*f)
+        #     else:
+        #         p4temp = maxtempHon0T + np.sqrt(0.02*0.4)
+        #         sl = (maxtempHon8T - p4temp)/(8-0.4)
+        #         interc = p4temp - sl*0.4
+        #         condit_temp = sl*f + interc
+        # else:
+        #     f = np.abs(self.field())
+        #     if f < 0.4:
+        #         condit_temp = maxtempHoff0T + np.sqrt(0.02*f)
+        #     else:
+        #         p4temp = maxtempHoff0T + np.sqrt(0.02*0.4)
+        #         sl = (maxtempHoff8T - p4temp)/(8-0.4)
+        #         interc = p4temp - sl*0.4
+        #         condit_temp = sl*f + interc
+
+        # while magtemp >= condit_temp:
+        #     print('The magnet temperature is {:.4f} K. '.format(magtemp) +
+        #           'Waiting for it to drop < {:.4f} K'.format(condit_temp))
+        #     sleep(15)
+        #     magtemp = self.magnet_temp()
+
+        s = self.magnet_sweeprate()
+        self.write('SET:SYS:VRM:COO:CART:RVST:MODE:RATE:RATE:' + str(s) +
+                   ':VSET:[' + str(x) + ' ' + str(y) + ' ' + str(z) + ']')
+        self.write('SET:SYS:VRM:ACTN:RTOS')
+        # just to give an time estimate, +10s for overhead
+        # t_wait = self.magnet_sweep_time() * 60 + 10
+        # print('Sweep time approximately ' + str(t_wait) + ' seconds')
+        return
+        
+    def _set_field_return_Bz(self, Bz):
+        x, y, z = self.field()
+        z = Bz
+        if self._first_magnet_use is False:
+            usecheck = input('Are you sure you want to use the magnet? [y/n]: ')
+            if usecheck.lower() == 'y':
+                self._first_magnet_use = True
+                pass
+            else:
+                print('Magnet will not be used')
+                return
+
+        ## Turn this off for now. Just be cautious when using the magnet
+        # maxtempHon8T = 4.87
+        # maxtempHon0T = 4.6
+        # maxtempHoff8T = 4.7
+        # maxtempHoff0T = 4.3
+        # magtemp = self.magnet_temp()
+        # if self.magnet_swh():
+        #     f = np.abs(self.field())
+        #     if f < 0.4:
+        #         condit_temp = maxtempHon0T + np.sqrt(0.02*f)
+        #     else:
+        #         p4temp = maxtempHon0T + np.sqrt(0.02*0.4)
+        #         sl = (maxtempHon8T - p4temp)/(8-0.4)
+        #         interc = p4temp - sl*0.4
+        #         condit_temp = sl*f + interc
+        # else:
+        #     f = np.abs(self.field())
+        #     if f < 0.4:
+        #         condit_temp = maxtempHoff0T + np.sqrt(0.02*f)
+        #     else:
+        #         p4temp = maxtempHoff0T + np.sqrt(0.02*0.4)
+        #         sl = (maxtempHoff8T - p4temp)/(8-0.4)
+        #         interc = p4temp - sl*0.4
+        #         condit_temp = sl*f + interc
+
+        # while magtemp >= condit_temp:
+        #     print('The magnet temperature is {:.4f} K. '.format(magtemp) +
+        #           'Waiting for it to drop < {:.4f} K'.format(condit_temp))
+        #     sleep(15)
+        #     magtemp = self.magnet_temp()
+
+        s = self.magnet_sweeprate()
         self.write('SET:SYS:VRM:COO:CART:RVST:MODE:RATE:RATE:' + str(s) +
                    ':VSET:[' + str(x) + ' ' + str(y) + ' ' + str(z) + ']')
         self.write('SET:SYS:VRM:ACTN:RTOS')

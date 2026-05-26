@@ -13,11 +13,7 @@ from qcodes.instrument_drivers.nplab_drivers.SIM900 import SIM900
 from qcodes.instrument_drivers.nplab_drivers.SIM900_stick import SIM900_stick
 from qcodes.instrument_drivers.nplab_drivers.SIM900_rs232 import SIM900_rs232
 from qcodes.instrument_drivers.stanford_research.SR830 import SR830
-## This SR865A is the standard one, with normal error handling
-# from qcodes.instrument_drivers.stanford_research.SR865A import SR865A
-## This SR865A contains error handling that allows a timeout error to occur
-## and keeps measuring
-from qcodes.instrument_drivers.nplab_drivers.SR865A import SR865A
+from qcodes.instrument_drivers.stanford_research.SR865A import SR865A
 from qcodes.instrument_drivers.nplab_drivers.vdpArduino import vdpArduino
 from qcodes.instrument_drivers.nplab_drivers.NPTriton import Triton
 from qcodes.instrument_drivers.nplab_drivers.SR560 import SR560
@@ -142,7 +138,8 @@ def ppms_instrs(instr_str):
 
 def triton_instrs(instr_str):
     if instr_str == 'triton':
-        triton = Triton('triton', 'triton.local', 33576)
+        triton = Triton('triton', '169.254.25.164', 33576)
+        # triton = Triton('triton', 'triton.local', 33576)
         builtins.triton = triton
     # if instr_str == 'k6':
     #     k6 = Keithley_6221('k6', 'GPIB::12::INSTR')
@@ -151,7 +148,7 @@ def triton_instrs(instr_str):
         k2182 = Keithley_2182a('k2182', 'GPIB::13::INSTR')
         builtins.k2182 = k2182
     elif instr_str == 'k2015':
-        k2015 = Keithley_2000('k2015', 'GPIB::1::INSTR')
+        k2015 = Keithley_2000('k2015', 'GPIB0::22::INSTR')
         builtins.k2015 = k2015
     elif instr_str == 'k2200':
         k2200 = Keithley_2200('k2200', 'GPIB1::23::INSTR')
@@ -184,8 +181,11 @@ def triton_instrs(instr_str):
         sr560 = SR560('sr560', 'COM5')
         builtins.sr560 = sr560
     elif instr_str == 'srdc':
-        srdc = SRDC205('srdc', 'COM3')
+        srdc = SRDC205('srdc', 'COM4')
         builtins.srdc = srdc
+    elif instr_str == 'srdc_2':
+        srdc_2 = SRDC205('srdc_2', 'COM3')
+        builtins.srdc_2 = srdc_2
     elif instr_str == 'k6':
         k6 = Keithley_6221_rs232('k6', 'COM4')
         builtins.k6 = k6

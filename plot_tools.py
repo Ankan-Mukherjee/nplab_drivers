@@ -1,7 +1,7 @@
 import qcodes as qc
 import pandas as pd
 import numpy as np
-from scipy.integrate import cumtrapz
+from scipy.integrate import cumulative_trapezoid as cumtrapz
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
