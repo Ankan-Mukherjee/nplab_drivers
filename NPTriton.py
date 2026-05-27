@@ -151,7 +151,7 @@ class Triton(IPInstrument):
                            get_cmd=partial(self._get_control_B_param, 'RFST'))
 
         self.add_parameter(name='magnet_swh',
-                           label='Magnet persistent switch heater',
+                           lable='Magnet persistent switch heater',
                            set_cmd=self._set_swh,
                            get_cmd='READ:SYS:VRM:SWHT',
                            get_parser=self._parse_swh,

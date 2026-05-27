@@ -3,13 +3,16 @@
 """
 Created on Tue Jan 30 16:38:38 2018
 DAC_ADC driver for QCodes, modeled after the do_DAC_ADC driver for qtlab
+Updated on Tue May 26 21:19:00 2026
+
 @author: robertpolski
+@last update: ankanmukherjee (2026/05/26, Qcodes 0.58.0)
 """
 
 
 from qcodes import Instrument
 import qcodes.utils.validators as vals
-from qcodes.utils.helpers import strip_attrs
+from qcodes.utils import strip_attrs
 from functools import partial
 import serial
 import time

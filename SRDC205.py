@@ -1,6 +1,13 @@
+"""
+Updated on Tue May 26 21:19:00 2026
+
+@author: robertpolski
+@last update: ankanmukherjee (2026/05/26, Qcodes 0.58.0)
+"""
+
 from qcodes import Instrument
 import qcodes.utils.validators as vals
-from qcodes.utils.helpers import strip_attrs
+from qcodes.utils import strip_attrs
 import serial
 import time
 from functools import partial

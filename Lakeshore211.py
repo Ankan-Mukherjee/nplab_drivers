@@ -1,7 +1,14 @@
+"""
+Updated on Tue May 26 21:19:00 2026
+
+@author: robertpolski
+@last update: ankanmukherjee (2026/05/26, Qcodes 0.58.0)
+"""
+
 import serial
 import time
 from qcodes import Instrument
-from qcodes.utils.helpers import strip_attrs
+from qcodes.utils import strip_attrs
 from functools import partial
 from qcodes.utils.validators import Enum, Ints
 

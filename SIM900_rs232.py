@@ -7,6 +7,10 @@ Created on Wednesday, July 29, 2020
 
 Basically a copy of the SIM900 driver but with added commands to connect to a serial connection
 and, for now, just an isolated voltage source in port 1 and nothing in the other 2 ports
+
+Updated on Tue May 26 21:19:00 2026
+
+@last update: ankanmukherjee (2026/05/26, Qcodes 0.58.0)
 """
 
 import numpy as np
@@ -18,7 +22,7 @@ import qcodes.utils.validators as vals
 import time
 from functools import partial
 import serial
-from qcodes.utils.helpers import strip_attrs
+from qcodes.utils import strip_attrs
 
 
 def parse_bool(value):

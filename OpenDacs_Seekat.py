@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Last edited Feb 5, 2018
 DAC_ADC driver for QCodes, modeled after the do_DAC_ADC driver for qtlab
 @author: robertpolski
+
+Updated on Tue May 26 21:19:00 2026
+
+@last update: ankanmukherjee (2026/05/26, Qcodes 0.58.0)
 """
 
 
 import numpy as np
 from qcodes import Instrument, Parameter
 import qcodes.utils.validators as vals
-from qcodes.utils.helpers import strip_attrs
+from qcodes.utils import strip_attrs
 from functools import partial
 import serial
 import time

@@ -1,11 +1,31 @@
+"""
+Updated on Tue May 26 21:19:00 2026
+
+@author: robertpolski
+@last update: ankanmukherjee (2026/05/26, Qcodes 0.58.0)
+"""
+
 # functions used to initalize the instruments on each computer
 import sys
 import time
+ 
+ ## Robbie version
+# from qcodes.instrument_drivers.tektronix.Keithley_2000 import Keithley_2000
+# from qcodes.instrument_drivers.nplab_drivers.Keithley_6221 import Keithley_6221
+# from qcodes.instrument_drivers.nplab_drivers.Keithley_2182a import Keithley_2182a
+# from qcodes.instrument_drivers.nplab_drivers.Keithley_2200 import Keithley_2200
+# from qcodes.instrument_drivers.nplab_drivers.Keithley_6221_RS232 import Keithley_6221_rs232
 
-from qcodes.instrument_drivers.tektronix.Keithley_2000 import Keithley_2000
+
+ ## Ankan Modification (2026/05/26, Qcodes 0.58.0)
+from qcodes.instrument_drivers.Keithley.Keithley_2000 import Keithley2000
 from qcodes.instrument_drivers.nplab_drivers.Keithley_6221 import Keithley_6221
 from qcodes.instrument_drivers.nplab_drivers.Keithley_2182a import Keithley_2182a
 from qcodes.instrument_drivers.nplab_drivers.Keithley_2200 import Keithley_2200
+from qcodes.instrument_drivers.nplab_drivers.Keithley_6221_RS232 import Keithley_6221_rs232
+
+
+## Rest of the Imports
 from qcodes.instrument_drivers.nplab_drivers.LR_700 import LR_700
 from qcodes.instrument_drivers.nplab_drivers.OpenDacs_Seekat import Seekat
 from qcodes.instrument_drivers.nplab_drivers.OpenDacs_DAC_ADC import DAC_ADC
@@ -14,13 +34,14 @@ from qcodes.instrument_drivers.nplab_drivers.SIM900_stick import SIM900_stick
 from qcodes.instrument_drivers.nplab_drivers.SIM900_rs232 import SIM900_rs232
 from qcodes.instrument_drivers.stanford_research.SR830 import SR830
 from qcodes.instrument_drivers.stanford_research.SR865A import SR865A
+
 from qcodes.instrument_drivers.nplab_drivers.vdpArduino import vdpArduino
 from qcodes.instrument_drivers.nplab_drivers.NPTriton import Triton
 from qcodes.instrument_drivers.nplab_drivers.SR560 import SR560
 from qcodes.instrument_drivers.nplab_drivers.SRDC205 import SRDC205
 from qcodes.instrument_drivers.nplab_drivers.Lakeshore211 import Lakeshore211
-from qcodes.instrument_drivers.nplab_drivers.Keithley_6221_RS232 import Keithley_6221_rs232
-from qcodes.instrument_drivers.nplab_drivers.Siglent1025 import Siglent1025
+
+# from qcodes.instrument_drivers.nplab_drivers.Siglent1025 import Siglent1025
 import builtins
 
 if sys.platform == 'win32':
@@ -181,10 +202,10 @@ def triton_instrs(instr_str):
         sr560 = SR560('sr560', 'COM5')
         builtins.sr560 = sr560
     elif instr_str == 'srdc':
-        srdc = SRDC205('srdc', 'COM4')
+        srdc = SRDC205('srdc', 'COM3')
         builtins.srdc = srdc
     elif instr_str == 'srdc_2':
-        srdc_2 = SRDC205('srdc_2', 'COM3')
+        srdc_2 = SRDC205('srdc_2', 'COM4')
         builtins.srdc_2 = srdc_2
     elif instr_str == 'k6':
         k6 = Keithley_6221_rs232('k6', 'COM4')
