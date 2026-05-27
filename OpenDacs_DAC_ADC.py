@@ -11,7 +11,7 @@ Updated on Tue May 26 21:19:00 2026
 
 
 from qcodes import Instrument
-import qcodes.utils.validators as vals
+import qcodes.validators as vals
 from qcodes.utils import strip_attrs
 from functools import partial
 import serial

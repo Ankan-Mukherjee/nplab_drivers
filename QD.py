@@ -13,7 +13,7 @@ import numpy as np
 from typing import Union
 import qcodes as qc
 from qcodes import Instrument
-import qcodes.utils.validators as vals
+import qcodes.validators as vals
 import time
 
 

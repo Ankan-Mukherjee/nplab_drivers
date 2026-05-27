@@ -12,7 +12,7 @@ Updated on Tue May 26 21:19:00 2026
 
 import numpy as np
 from qcodes import Instrument, Parameter
-import qcodes.utils.validators as vals
+import qcodes.validators as vals
 from qcodes.utils import strip_attrs
 from functools import partial
 import serial

@@ -11,7 +11,7 @@ import logging
 from traceback import format_exc
 
 from qcodes import IPInstrument
-from qcodes.utils.validators import Enum, Ints, Numbers
+from qcodes.validators import Enum, Ints, Numbers
 
 from time import sleep
 import numpy as np

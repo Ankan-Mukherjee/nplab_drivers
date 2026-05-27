@@ -9,7 +9,7 @@ Keithley_2200 voltage/current DC source driver
 
 
 from qcodes import VisaInstrument
-import qcodes.utils.validators as vals
+import qcodes.validators as vals
 
 
 class Keithley_2200(VisaInstrument):

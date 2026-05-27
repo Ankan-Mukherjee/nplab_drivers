@@ -13,7 +13,7 @@ import numpy as np
 from functools import partial
 
 from qcodes import VisaInstrument
-import qcodes.utils.validators as vals
+import qcodes.validators as vals
 
 
 def parse_output_string(s):

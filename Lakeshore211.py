@@ -10,7 +10,7 @@ import time
 from qcodes import Instrument
 from qcodes.utils import strip_attrs
 from functools import partial
-from qcodes.utils.validators import Enum, Ints
+from qcodes.validators import Enum, Ints
 
 boolcheck = (0, 1, 'on', 'off', 'ON', 'OFF', False, True)
 

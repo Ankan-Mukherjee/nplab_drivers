@@ -8,7 +8,7 @@ import pyvisa as visa
 import pyvisa.constants as vi_const
 import pyvisa.resources
 
-import qcodes.utils.validators as vals
+import qcodes.validators as vals
 import time
 from functools import partial
 

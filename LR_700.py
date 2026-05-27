@@ -1,5 +1,5 @@
 from qcodes import VisaInstrument
-import qcodes.utils.validators as vals
+import qcodes.validators as vals
 from functools import partial
 import time
 import numpy as np

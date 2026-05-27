@@ -12,8 +12,8 @@ import numpy as np
 from typing import Union
 
 from qcodes import VisaInstrument
-from qcodes.instrument.parameter import ArrayParameter, MultiParameter
-import qcodes.utils.validators as vals
+from qcodes import ArrayParameter, MultiParameter
+import qcodes.validators as vals
 import time
 from functools import partial
 

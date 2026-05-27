@@ -1,7 +1,6 @@
-# Version 26.05.26.2
-## Change Log:
+## Version 26.05.27.1 Change Log:
 <ul>
-<li>Compatibility for QCoDes 0.58.0</li>
+<li>Compatibility for Python==3.14 and QCoDes==0.58.0</li>
 <li>srdc and srdc_2 are now srdc1 and srdc2</li>
 <li>Keithley_2000 is now Keithley2000</li>
 <li>Fixed small typos</li>
