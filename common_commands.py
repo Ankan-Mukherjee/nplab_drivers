@@ -4,7 +4,11 @@ import qcodes as qc
 from math import ceil
 import numpy as np
 import time
+from qcodes_loop.loops import Loop
 from qcodes.instrument_drivers.nplab_drivers.time_params import time_from_start
+from qcodes_loop.plots.pyqtgraph import QtPlot
+from qcodes_loop.actions import Task
+
 
 
 def single_param_sweep(SetParam, SetArray, delay, *MeasParams,
@@ -35,8 +39,7 @@ def single_param_sweep(SetParam, SetArray, delay, *MeasParams,
     save_plots: True by default. If false, doesn't save plots at the end of the
                 sweep
     """
-
-    loop = qc.Loop(SetParam[SetArray], delay=delay).each(*MeasParams)
+    loop = Loop(SetParam[SetArray], delay=delay).each(*MeasParams)
     data = loop.get_data_set(name=DataName)
     plot = []
 
@@ -61,7 +64,7 @@ def single_param_sweep(SetParam, SetArray, delay, *MeasParams,
             XParam = SetParam
 
         if len(MeasParams) == 1:
-            plot = qc.QtPlot(getattr(data, str(XParam)+'_set'),
+            plot = QtPlot(getattr(data, str(XParam)+'_set'),
                              getattr(data, str(*MeasParams)),
                              window_title=str(XParam)+' vs. '+str(*MeasParams))
             loop.with_bg_task(plot.update)
@@ -89,7 +92,7 @@ def single_param_sweep(SetParam, SetArray, delay, *MeasParams,
 
             for i in range(len(YParam)):
                 title = str(YParam[i]) + ' vs. ' + str(XParam[i])
-                plot.append(qc.QtPlot(getattr(data, XParamStr[i]),
+                plot.append(QtPlot(getattr(data, XParamStr[i]),
                             getattr(data, str(YParam[i])), window_title=title))
 
             loop.with_bg_task(_plot_update)
@@ -151,10 +154,10 @@ def twod_param_sweep(SetParam1, SetArray1, SetParam2, SetArray2, *MeasParams,
             SetParam2(Param2_SetBetween)
             return
 
-    innerloop = qc.Loop(SetParam2[SetArray2],
+    innerloop = Loop(SetParam2[SetArray2],
                         delay=SetDelay2).each(*MeasParams)
-    twodloop = qc.Loop(SetParam1[SetArray1],
-                       delay=SetDelay1).each(innerloop, qc.Task(between_func))
+    twodloop = Loop(SetParam1[SetArray1],
+                       delay=SetDelay1).each(innerloop, Task(between_func))
     data = twodloop.get_data_set(name=DataName)
     plot = []
 
@@ -176,7 +179,7 @@ def twod_param_sweep(SetParam1, SetArray1, SetParam2, SetArray2, *MeasParams,
 
     if plot_results:
         if len(MeasParams) == 1:
-            plot = qc.QtPlot(getattr(data, str(*MeasParams)), window_title=str(*MeasParams))
+            plot = QtPlot(getattr(data, str(*MeasParams)), window_title=str(*MeasParams))
             twodloop.with_bg_task(plot.update)
         else:
             if ZParam is None:
@@ -185,7 +188,7 @@ def twod_param_sweep(SetParam1, SetArray1, SetParam2, SetArray2, *MeasParams,
                 ZParam = [ZParam]
 
             for zp in ZParam:
-                plot.append(qc.QtPlot(getattr(data, str(zp)), window_title=str(zp)))
+                plot.append(QtPlot(getattr(data, str(zp)), window_title=str(zp)))
 
             twodloop.with_bg_task(_plot_update)
 
@@ -253,14 +256,14 @@ def data_log(delay, *MeasParams, N=None, minutes=None, DataName='',
     elif N is not None and minutes is not None:
         return ValueError('Only use N or minutes arguments')
     elif N is not None and minutes is None:
-        loop = qc.Loop(count.sweep(1, int(N), step=1)).each(time0,
+        loop = Loop(count.sweep(1, int(N), step=1)).each(time0,
                                                             *MeasParams,
                                                             qc.Wait(delay),
                                                             qc.BreakIf(
                                                                 breakif))
     elif minutes is not None and N is None:
         N = ceil(minutes*60/delay)
-        loop = qc.Loop(count.sweep(1, int(N), step=1)).each(time0,
+        loop = Loop(count.sweep(1, int(N), step=1)).each(time0,
                                                             *MeasParams,
                                                             qc.Wait(delay),
                                                             qc.BreakIf(
@@ -287,7 +290,7 @@ def data_log(delay, *MeasParams, N=None, minutes=None, DataName='',
             XParam = time0
 
         if len(MeasParams) == 1:
-            plot = qc.QtPlot(getattr(data, str(XParam)),
+            plot = QtPlot(getattr(data, str(XParam)),
                              getattr(data, str(*MeasParams)),
                              window_title=str(XParam)+' vs. '+str(*MeasParams))
             loop.with_bg_task(plot.update)
@@ -311,7 +314,7 @@ def data_log(delay, *MeasParams, N=None, minutes=None, DataName='',
             # plot = []
             for i in range(len(YParam)):
                 title = str(YParam[i]) + ' vs. ' + str(XParam[i])
-                plot.append(qc.QtPlot(getattr(data, str(XParam[i])),
+                plot.append(QtPlot(getattr(data, str(XParam[i])),
                             getattr(data, str(YParam[i])), window_title=title))
 
             # def _plot_update():
