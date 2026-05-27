@@ -126,7 +126,7 @@ def ppms_instrs(instr_str):
         k2182 = Keithley_2182a('k2182', 'GPIB::7::INSTR')
         builtins.k2182 = k2182
     elif instr_str == 'k2015':
-        k2015 = Keithley_2000('k2015', 'GPIB::1::INSTR')
+        k2015 = Keithley2000('k2015', 'GPIB::1::INSTR')
         builtins.k2015 = k2015
     elif instr_str == 'k2200':
         k2200 = Keithley_2200('k2200', 'GPIB::19::INSTR')
@@ -169,7 +169,7 @@ def triton_instrs(instr_str):
         k2182 = Keithley_2182a('k2182', 'GPIB::13::INSTR')
         builtins.k2182 = k2182
     elif instr_str == 'k2015':
-        k2015 = Keithley_2000('k2015', 'GPIB0::22::INSTR')
+        k2015 = Keithley2000('k2015', 'GPIB0::22::INSTR')
         builtins.k2015 = k2015
     elif instr_str == 'k2200':
         k2200 = Keithley_2200('k2200', 'GPIB1::23::INSTR')
@@ -201,12 +201,12 @@ def triton_instrs(instr_str):
     elif instr_str == 'sr560':
         sr560 = SR560('sr560', 'COM5')
         builtins.sr560 = sr560
-    elif instr_str == 'srdc':
-        srdc = SRDC205('srdc', 'COM3')
-        builtins.srdc = srdc
-    elif instr_str == 'srdc_2':
-        srdc_2 = SRDC205('srdc_2', 'COM4')
-        builtins.srdc_2 = srdc_2
+    elif instr_str == 'srdc1':
+        srdc1 = SRDC205('srdc1', 'COM3')
+        builtins.srdc1 = srdc1
+    elif instr_str == 'srdc2':
+        srdc2 = SRDC205('srdc2', 'COM4')
+        builtins.srdc2 = srdc2
     elif instr_str == 'k6':
         k6 = Keithley_6221_rs232('k6', 'COM4')
         builtins.k6 = k6

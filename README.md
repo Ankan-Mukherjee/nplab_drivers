@@ -1,3 +1,13 @@
+# Version 26.05.26.1
+## Change Log:
+<ul>
+<li>Compatibility for QCoDes 0.58.0</li>
+<li>srdc and srdc_2 are now srdc1 and srdc2</li>
+<li>Keithley_2000 is now Keithley2000</li>
+<li>Fixed small typos</li>
+</ul>
+
+
 # nplab_drivers
 Some drivers in development for the Nadj-Perge Group at Caltech.
 To be used along with the QCoDes setup, which you can clone (you can clone it to anywhere you want on your computer):
