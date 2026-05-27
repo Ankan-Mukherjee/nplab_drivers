@@ -1,4 +1,4 @@
-# Version 26.05.26.1
+# Version 26.05.26.2
 ## Change Log:
 <ul>
 <li>Compatibility for QCoDes 0.58.0</li>
