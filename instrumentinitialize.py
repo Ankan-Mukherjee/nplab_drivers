@@ -36,7 +36,9 @@ from qcodes.instrument_drivers.stanford_research.SR830 import SR830
 from qcodes.instrument_drivers.stanford_research.SR865A import SR865A
 
 from qcodes.instrument_drivers.nplab_drivers.vdpArduino import vdpArduino
-from qcodes.instrument_drivers.nplab_drivers.NPTriton import Triton
+# from qcodes.instrument_drivers.nplab_drivers.NPTriton import Triton
+from qcodes.instrument_drivers.nplab_drivers.NPTriton_manual import Triton
+
 from qcodes.instrument_drivers.nplab_drivers.SR560 import SR560
 from qcodes.instrument_drivers.nplab_drivers.SRDC205 import SRDC205
 from qcodes.instrument_drivers.nplab_drivers.Lakeshore211 import Lakeshore211
@@ -202,10 +204,10 @@ def triton_instrs(instr_str):
         sr560 = SR560('sr560', 'COM5')
         builtins.sr560 = sr560
     elif instr_str == 'srdc1':
-        srdc1 = SRDC205('srdc1', 'COM3')
+        srdc1 = SRDC205('srdc1', 'COM4')
         builtins.srdc1 = srdc1
     elif instr_str == 'srdc2':
-        srdc2 = SRDC205('srdc2', 'COM4')
+        srdc2 = SRDC205('srdc2', 'COM3')
         builtins.srdc2 = srdc2
     elif instr_str == 'k6':
         k6 = Keithley_6221_rs232('k6', 'COM4')
