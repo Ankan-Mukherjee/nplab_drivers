@@ -7,7 +7,7 @@ import time
 from qcodes_loop.loops import Loop
 from qcodes.instrument_drivers.nplab_drivers.time_params import time_from_start
 from qcodes_loop.plots.pyqtgraph import QtPlot
-from qcodes_loop.actions import Task
+from qcodes_loop.actions import Task, Wait, BreakIf
 
 
 
@@ -258,15 +258,15 @@ def data_log(delay, *MeasParams, N=None, minutes=None, DataName='',
     elif N is not None and minutes is None:
         loop = Loop(count.sweep(1, int(N), step=1)).each(time0,
                                                             *MeasParams,
-                                                            qc.Wait(delay),
-                                                            qc.BreakIf(
+                                                            Wait(delay),
+                                                            BreakIf(
                                                                 breakif))
     elif minutes is not None and N is None:
         N = ceil(minutes*60/delay)
         loop = Loop(count.sweep(1, int(N), step=1)).each(time0,
                                                             *MeasParams,
-                                                            qc.Wait(delay),
-                                                            qc.BreakIf(
+                                                            Wait(delay),
+                                                            BreakIf(
                                                                 breakif))
     data = loop.get_data_set(name=DataName)
     plot = []

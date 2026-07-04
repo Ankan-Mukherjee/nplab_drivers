@@ -1,3 +1,9 @@
+## Version 26.07.04.1 Change Log:
+<ul>
+<li>Fixes to npd.data_log</li>
+<li>Manual cooldown added</li>
+</ul>
+
 ## Version 26.05.27.1 Change Log:
 <ul>
 <li>Compatibility for Python==3.14 and QCoDes==0.58.0</li>
